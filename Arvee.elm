@@ -8,12 +8,18 @@ quote = "9.50"
 type LiabilityCoverage = Medical | BodilyInjury | Uninsured
 type RangeCoverage = Comprehensive | Collision
 type YesNoCoverage = Rental | Roadside
+type Coverage = C1 LiabilityCoverage | C2 RangeCoverage | C3 YesNoCoverage
 
-display : RangeCoverage -> String
+display : Coverage -> String
 display coverage =
   case coverage of
-    Comprehensive -> "Comprehensive coverage"
-    Collision -> "Collision coverage"
+    C2 Comprehensive -> "Comprehensive coverage"
+    C2 Collision -> "Collision coverage"
+    C1 Medical -> "Medical coverage"
+    C1 BodilyInjury -> "Bodily Injury coverage"
+    C1 Uninsured -> "Uninsure coverage"
+    C3 Rental -> "Rental reimbursement coverage"
+    C3 Roadside -> "Roadside coverage"
 
 prices : RangeCoverage -> List Int
 prices coverage =
@@ -27,7 +33,7 @@ toLi s =
 
 main =
   div [] [
-    text (display Comprehensive)
+    text (display (C2 Comprehensive))
     , ul [] 
       (List.map toLi (List.map toString (prices Comprehensive)))
     , text ("Your new insurance will cost $" ++ quote)
