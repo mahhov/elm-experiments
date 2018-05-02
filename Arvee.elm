@@ -1,6 +1,8 @@
 module Arvee exposing (..)
 
 import Html exposing (..)
+import Css exposing (..)
+import Style exposing (..)
 
 quote : String
 quote = "9.50"
@@ -27,14 +29,29 @@ prices coverage =
     Comprehensive -> [100, 200, 300]
     Collision -> [50, 150, 250]
     
-toLi : String -> Html msg
-toLi s =
-  li [] [ text s ]
+price : LiabilityCoverage -> Int
+price coverage =
+  case coverage of
+    Medical -> 100
+    BodilyInjury -> 200
+    Uninsured -> 300
+    
+toLi : LiabilityCoverage -> Html msg
+toLi coverage =
+  li [] [
+         h3 [] [ display (C1 coverage) |> text ] 
+         , div [] [ price coverage |> toString |> text ]]
+         
+coveragesListStyle : List Style
+coveragesListStyle = [listStyle, none]
+
+liabilityCoverages : List LiabilityCoverage
+liabilityCoverages = [ Medical, BodilyInjury, Uninsured ]
 
 main =
   div [] [
     text (display (C2 Comprehensive))
-    , ul [] 
-      (List.map toLi (List.map toString (prices Comprehensive)))
+    , ul [ style coveragesListStyle] 
+      (List.map toLi liabilityCoverages)
     , text ("Your new insurance will cost $" ++ quote)
   ]
