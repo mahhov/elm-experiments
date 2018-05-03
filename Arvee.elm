@@ -1,8 +1,9 @@
 module Arvee exposing (..)
 
-import Html exposing (..)
 import Css exposing (..)
-import Style exposing (..)
+import Html
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (css, href, src)
 
 quote : String
 quote = "9.50"
@@ -43,15 +44,43 @@ toLi coverage =
          , div [] [ price coverage |> toString |> text ]]
          
 coveragesListStyle : List Style
-coveragesListStyle = [listStyle, none]
+coveragesListStyle = [listStyle none]
 
 liabilityCoverages : List LiabilityCoverage
 liabilityCoverages = [ Medical, BodilyInjury, Uninsured ]
 
+view : Model -> Html Msg
+view model =
+    div [] [
+        text (display (C2 Comprehensive))
+        , ul [ css coveragesListStyle]
+          (List.map toLi liabilityCoverages)
+        , text ("Your new insurance will cost $" ++ quote)
+      ]
+
+
+main : Program Never Model Msg
 main =
-  div [] [
-    text (display (C2 Comprehensive))
-    , ul [ style coveragesListStyle] 
-      (List.map toLi liabilityCoverages)
-    , text ("Your new insurance will cost $" ++ quote)
-  ]
+    Html.beginnerProgram
+        { view = view >> toUnstyled
+        , update = update
+        , model = initialModel
+        }
+
+
+update : Msg -> Model -> Model
+update msg model =
+    model
+
+
+type Msg
+    = DoSomething
+
+
+type alias Model =
+    ()
+
+
+initialModel : Model
+initialModel =
+    ()
